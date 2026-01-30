@@ -576,6 +576,19 @@ h1, h2, h3, h4, h5, h6 {
   color: #0F172A; /* text-slate-900 */
 }
 
+.nav-logo-right {
+  height: 28px;
+  width: auto;
+  margin-left: 4px;
+}
+
+@media (min-width: 1024px) {
+  .nav-logo-right {
+    height: 32px;
+  }
+}
+
+
 
 .nav-link {
   font-size: var(--text-sm);
