@@ -77,10 +77,7 @@ function Hero() {
       <div className="container">
         <div className="hero-grid">
           <div className="hero-content animate-fade-in">
-            <a href="/" className="hero-brand-logo" aria-label="Go Global home">
-              <span className="hero-brand-icon">🌍</span>
-              <span className="hero-brand-text">Go Global</span>
-            </a>
+
             
             <span className="label hero-label">⚡ INDIA GLOBAL TRADE SOLUTIONS</span>
             
