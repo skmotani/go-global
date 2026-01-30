@@ -8,7 +8,7 @@ function About() {
         <div className="container">
           <div className="hero-grid">
             <div className="hero-content">
-              <span className="label">About Motani</span>
+              <span className="label">About Go Global</span>
               <h1 className="display-1" style={{ marginTop: 'var(--space-4)' }}>
                 20+ Years of<br/>
                 <span className="gradient-text">Export Excellence</span>

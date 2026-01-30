@@ -16,8 +16,8 @@ function Navbar() {
     <nav className="navbar">
       <div className="container navbar-inner">
         <Link to="/" className="nav-logo">
-          <div className="nav-logo-icon">M</div>
-          <span>Motani</span>
+          <img src="/logo.png" alt="Go Global" className="nav-logo-img" />
+          <span>Go Global</span>
         </Link>
 
         <div className="nav-links">

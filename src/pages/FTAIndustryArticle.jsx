@@ -647,7 +647,7 @@ const INDUSTRY_DATA = {
 // Fallback Generic
 const DEFAULT_INDUSTRY = {
   title: 'Industry Export Guide',
-  author: 'Motani Research',
+  author: 'Go Global Research',
   date: '2025',
   readTime: '5 min read',
   heroImage: '📦',

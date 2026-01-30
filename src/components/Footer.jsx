@@ -7,11 +7,10 @@ function Footer() {
     <footer className="footer">
       <div className="container">
         <div className="footer-grid">
-          {/* Brand */}
           <div className="footer-brand">
             <Link to="/" className="nav-logo" style={{ color: 'white' }}>
-              <div className="nav-logo-icon">M</div>
-              <span>Motani</span>
+              <img src="/logo.png" alt="Go Global" className="nav-logo-img" />
+              <span>Go Global</span>
             </Link>
             <p className="footer-brand-desc">
               Leading India's export consulting landscape by bridging the gap between 
@@ -85,7 +84,7 @@ function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© {currentYear} Motani Export Consulting. All rights reserved.</p>
+          <p>© {currentYear} Go Global Trade Platform. All rights reserved.</p>
           <div className="footer-legal-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
