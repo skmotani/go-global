@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import MultiSelect from './MultiSelect'
+import { generateClientEmail, generateAdminEmail } from '../utils/emailTemplates'
 
 const STORAGE_KEY = 'go-global-export-plan-form'
 
@@ -14,243 +15,56 @@ const BUSINESS_TYPES = ['Manufacturer', 'Trader', 'Broker', 'Exporter', 'Agent',
 
 // HSN Chapters (1-99) with key sub-chapters
 const HSN_CODES = [
-  // Chapter 01-05: Live Animals & Animal Products
-  '01 - Live Animals',
-  '02 - Meat & Edible Meat',
-  '03 - Fish & Seafood',
-  '0306 - Crustaceans (Shrimps)',
-  '04 - Dairy, Eggs, Honey',
-  '05 - Animal Products NES',
-  // Chapter 06-14: Vegetable Products
-  '06 - Live Plants & Flowers',
-  '07 - Vegetables',
-  '08 - Fruits & Nuts',
-  '0803 - Bananas',
-  '09 - Coffee, Tea, Spices',
-  '0902 - Tea',
-  '0904 - Pepper',
-  '10 - Cereals',
-  '1006 - Rice',
-  '11 - Milling Products',
-  '12 - Oil Seeds',
-  '13 - Lac, Gums, Resins',
-  '14 - Vegetable Products NES',
-  // Chapter 15: Fats & Oils
-  '15 - Fats & Oils',
-  // Chapter 16-24: Food Products
-  '16 - Meat/Fish Preparations',
-  '17 - Sugar & Confectionery',
-  '18 - Cocoa & Chocolate',
-  '19 - Cereal Preparations',
-  '20 - Vegetable Preparations',
-  '21 - Misc Food Preparations',
-  '22 - Beverages',
-  '23 - Food Industry Residues',
-  '24 - Tobacco',
-  // Chapter 25-27: Minerals
-  '25 - Salt, Sulfur, Stone',
-  '26 - Ores, Slag, Ash',
-  '27 - Mineral Fuels, Oils',
-  // Chapter 28-38: Chemicals
-  '28 - Inorganic Chemicals',
-  '29 - Organic Chemicals',
-  '2941 - Antibiotics',
-  '30 - Pharmaceutical Products',
-  '3004 - Medicaments',
-  '31 - Fertilizers',
-  '32 - Tanning, Dyes, Paints',
-  '33 - Essential Oils, Cosmetics',
-  '34 - Soap, Waxes',
-  '35 - Albuminoids, Glues',
-  '36 - Explosives',
-  '37 - Photographic Goods',
-  '38 - Misc Chemical Products',
-  // Chapter 39-40: Plastics & Rubber
-  '39 - Plastics & Articles',
-  '3926 - Plastic Articles',
-  '40 - Rubber & Articles',
-  // Chapter 41-43: Leather
-  '41 - Raw Hides & Leather',
-  '42 - Leather Articles',
-  '4202 - Bags, Cases, Wallets',
-  '43 - Furskins',
-  // Chapter 44-49: Wood & Paper
-  '44 - Wood & Articles',
-  '45 - Cork',
-  '46 - Straw Articles',
-  '47 - Pulp',
-  '48 - Paper & Paperboard',
-  '49 - Printed Books, Newspapers',
-  // Chapter 50-63: Textiles
-  '50 - Silk',
-  '51 - Wool',
-  '52 - Cotton',
-  '5208 - Woven Cotton Fabrics',
-  '53 - Vegetable Textile Fibers',
-  '54 - Man-made Filaments',
-  '55 - Man-made Staple Fibers',
-  '56 - Wadding, Felt, Twine',
-  '57 - Carpets',
-  '58 - Special Woven Fabrics',
-  '59 - Impregnated Textiles',
-  '60 - Knitted Fabrics',
-  '61 - Knitted Apparel',
-  '6109 - T-Shirts',
-  '6110 - Sweaters',
-  '62 - Woven Apparel',
-  '6203 - Mens Suits, Trousers',
-  '6204 - Womens Suits, Dresses',
-  '63 - Made-up Textiles',
-  '6302 - Bed Linen',
-  // Chapter 64-67: Footwear, Headgear
-  '64 - Footwear',
-  '6403 - Leather Footwear',
-  '65 - Headgear',
-  '66 - Umbrellas',
-  '67 - Feathers, Artificial Flowers',
-  // Chapter 68-70: Stone, Ceramic, Glass
-  '68 - Stone, Plaster, Cement',
-  '69 - Ceramics',
-  '70 - Glass & Glassware',
-  // Chapter 71: Gems & Jewelry
-  '71 - Gems, Jewelry, Coins',
-  '7102 - Diamonds',
-  '7113 - Gold Jewelry',
-  // Chapter 72-83: Base Metals
-  '72 - Iron & Steel',
-  '73 - Iron/Steel Articles',
-  '7308 - Steel Structures',
-  '74 - Copper',
-  '75 - Nickel',
-  '76 - Aluminum',
-  '78 - Lead',
-  '79 - Zinc',
-  '80 - Tin',
-  '81 - Other Base Metals',
-  '82 - Tools, Cutlery',
-  '83 - Misc Metal Articles',
-  // Chapter 84: Machinery
-  '84 - Machinery & Equipment',
-  '8414 - Pumps, Compressors',
-  '8421 - Centrifuges, Filters',
-  '8429 - Bulldozers, Excavators',
-  '8443 - Printing Machinery',
-  '8445 - Textile Machinery',
-  '8471 - Computers',
-  '8481 - Taps, Valves',
-  // Chapter 85: Electrical
-  '85 - Electrical Equipment',
-  '8504 - Transformers',
-  '8517 - Telephones, Smartphones',
-  '8528 - Monitors, TVs',
-  '8541 - Semiconductors',
-  '8542 - Integrated Circuits',
-  // Chapter 86-89: Vehicles
-  '86 - Railway Equipment',
-  '87 - Vehicles',
-  '8703 - Motor Cars',
-  '8708 - Auto Parts',
-  '88 - Aircraft',
-  '89 - Ships, Boats',
-  // Chapter 90-92: Instruments
-  '90 - Optical, Medical Instruments',
-  '9018 - Medical Instruments',
-  '91 - Clocks, Watches',
-  '92 - Musical Instruments',
-  // Chapter 93-99: Misc
-  '93 - Arms & Ammunition',
-  '94 - Furniture, Bedding',
-  '9403 - Furniture',
-  '95 - Toys, Games, Sports',
-  '96 - Misc Manufactured',
-  '97 - Works of Art',
-  '99 - Special Transactions'
+  '01 - Live Animals', '02 - Meat & Edible Meat', '03 - Fish & Seafood', '04 - Dairy, Eggs, Honey',
+  '05 - Animal Products NES', '06 - Live Plants & Flowers', '07 - Vegetables', '08 - Fruits & Nuts',
+  '09 - Coffee, Tea, Spices', '10 - Cereals', '11 - Milling Products', '12 - Oil Seeds',
+  '13 - Lac, Gums, Resins', '14 - Vegetable Products NES', '15 - Fats & Oils', '16 - Meat/Fish Preparations',
+  '17 - Sugar & Confectionery', '18 - Cocoa & Chocolate', '19 - Cereal Preparations', '20 - Vegetable Preparations',
+  '21 - Misc Food Preparations', '22 - Beverages', '23 - Food Industry Residues', '24 - Tobacco',
+  '25 - Salt, Sulfur, Stone', '26 - Ores, Slag, Ash', '27 - Mineral Fuels, Oils', '28 - Inorganic Chemicals',
+  '29 - Organic Chemicals', '30 - Pharmaceutical Products', '31 - Fertilizers', '32 - Tanning, Dyes, Paints',
+  '33 - Essential Oils, Cosmetics', '34 - Soap, Waxes', '35 - Albuminoids, Glues', '36 - Explosives',
+  '37 - Photographic Goods', '38 - Misc Chemical Products', '39 - Plastics & Articles', '40 - Rubber & Articles', 
+  '41 - Raw Hides & Leather', '42 - Leather Articles', '43 - Furskins', '44 - Wood & Articles', '45 - Cork',
+  '46 - Straw Articles', '47 - Pulp', '48 - Paper & Paperboard', '49 - Printed Books, Newspapers',
+  '50 - Silk', '51 - Wool', '52 - Cotton', '53 - Vegetable Textile Fibers', '54 - Man-made Filaments',
+  '55 - Man-made Staple Fibers', '56 - Wadding, Felt, Twine', '57 - Carpets', '58 - Special Woven Fabrics',
+  '59 - Impregnated Textiles', '60 - Knitted Fabrics', '61 - Knitted Apparel', '62 - Woven Apparel',
+  '63 - Made-up Textiles', '64 - Footwear', '65 - Headgear', '66 - Umbrellas', '67 - Feathers, Artificial Flowers',
+  '68 - Stone, Plaster, Cement', '69 - Ceramics', '70 - Glass & Glassware', '71 - Gems, Jewelry, Coins',
+  '72 - Iron & Steel', '73 - Iron/Steel Articles', '74 - Copper', '75 - Nickel', '76 - Aluminum',
+  '78 - Lead', '79 - Zinc', '80 - Tin', '81 - Other Base Metals', '82 - Tools, Cutlery', '83 - Misc Metal Articles',
+  '84 - Machinery & Equipment', '85 - Electrical Equipment', '86 - Railway Equipment', '87 - Vehicles',
+  '88 - Aircraft', '89 - Ships, Boats', '90 - Optical, Medical Instruments', '91 - Clocks, Watches',
+  '92 - Musical Instruments', '93 - Arms & Ammunition', '94 - Furniture, Bedding', '95 - Toys, Games, Sports',
+  '96 - Misc Manufactured', '97 - Works of Art', '99 - Special Transactions'
 ]
 
 // Comprehensive country list
 const TARGET_MARKETS = [
-  // FTA Countries (Priority)
-  'UAE 🇦🇪',
-  'UK 🇬🇧',
-  'Australia 🇦🇺',
-  'Singapore 🇸🇬',
-  'South Korea 🇰🇷',
-  'Japan 🇯🇵',
-  'ASEAN (All)',
-  // EU Countries
-  'Germany 🇩🇪',
-  'France 🇫🇷',
-  'Netherlands 🇳🇱',
-  'Italy 🇮🇹',
-  'Belgium 🇧🇪',
-  'Spain 🇪🇸',
-  'Poland 🇵🇱',
-  'Sweden 🇸🇪',
-  'Austria 🇦🇹',
-  'EU (Other)',
-  // Americas
-  'USA 🇺🇸',
-  'Canada 🇨🇦',
-  'Mexico 🇲🇽',
-  'Brazil 🇧🇷',
-  'Chile 🇨🇱',
-  'Argentina 🇦🇷',
-  'Colombia 🇨🇴',
-  'Peru 🇵🇪',
-  // Middle East
-  'Saudi Arabia 🇸🇦',
-  'Qatar 🇶🇦',
-  'Kuwait 🇰🇼',
-  'Oman 🇴🇲',
-  'Bahrain 🇧🇭',
-  'Israel 🇮🇱',
-  'Turkey 🇹🇷',
-  'Iran 🇮🇷',
-  'Iraq 🇮🇶',
-  // Africa
-  'South Africa 🇿🇦',
-  'Egypt 🇪🇬',
-  'Kenya 🇰🇪',
-  'Nigeria 🇳🇬',
-  'Morocco 🇲🇦',
-  'Tanzania 🇹🇿',
-  'Ghana 🇬🇭',
-  'Ethiopia 🇪🇹',
-  // Asia Pacific
-  'China 🇨🇳',
-  'Hong Kong 🇭🇰',
-  'Taiwan 🇹🇼',
-  'Vietnam 🇻🇳',
-  'Thailand 🇹🇭',
-  'Indonesia 🇮🇩',
-  'Malaysia 🇲🇾',
-  'Philippines 🇵🇭',
-  'Bangladesh 🇧🇩',
-  'Sri Lanka 🇱🇰',
-  'Nepal 🇳🇵',
-  'Myanmar 🇲🇲',
-  // Oceania
-  'New Zealand 🇳🇿',
-  'Fiji 🇫🇯',
-  // CIS
-  'Russia 🇷🇺',
-  'Kazakhstan 🇰🇿',
-  'Uzbekistan 🇺🇿',
-  // Other
-  'Other'
+  'UAE 🇦🇪', 'UK 🇬🇧', 'Australia 🇦🇺', 'Singapore 🇸🇬', 'South Korea 🇰🇷', 'Japan 🇯🇵', 'ASEAN (All)',
+  'Germany 🇩🇪', 'France 🇫🇷', 'Netherlands 🇳🇱', 'Italy 🇮🇹', 'Belgium 🇧🇪', 'Spain 🇪🇸', 'Poland 🇵🇱',
+  'Sweden 🇸🇪', 'Austria 🇦🇹', 'EU (Other)', 'USA 🇺🇸', 'Canada 🇨🇦', 'Mexico 🇲🇽', 'Brazil 🇧🇷',
+  'Chile 🇨🇱', 'Argentina 🇦🇷', 'Colombia 🇨🇴', 'Peru 🇵🇪', 'Saudi Arabia 🇸🇦', 'Qatar 🇶🇦', 'Kuwait 🇰🇼',
+  'Oman 🇴🇲', 'Bahrain 🇧🇭', 'Israel 🇮🇱', 'Turkey 🇹🇷', 'Iran 🇮🇷', 'Iraq 🇮🇶', 'South Africa 🇿🇦',
+  'Egypt 🇪🇬', 'Kenya 🇰🇪', 'Nigeria 🇳🇬', 'Morocco 🇲🇦', 'Tanzania 🇹🇿', 'Ghana 🇬🇭', 'Ethiopia 🇪🇹',
+  'China 🇨🇳', 'Hong Kong 🇭🇰', 'Taiwan 🇹🇼', 'Vietnam 🇻🇳', 'Thailand 🇹🇭', 'Indonesia 🇮🇩', 'Malaysia 🇲🇾',
+  'Philippines 🇵🇭', 'Bangladesh 🇧🇩', 'Sri Lanka 🇱🇰', 'Nepal 🇳🇵', 'Myanmar 🇲🇲', 'New Zealand 🇳🇿',
+  'Fiji 🇫🇯', 'Russia 🇷🇺', 'Kazakhstan 🇰🇿', 'Uzbekistan 🇺🇿', 'Other'
 ]
 
 const SALES_BANDS = ['< ₹5 Cr', '₹5–25 Cr', '₹25–100 Cr', '₹100–500 Cr', '₹500 Cr+']
-
 const ROLES = ['Owner/Director', 'Export Manager', 'Sales Head', 'Operations', 'Other']
-
 const CHALLENGES = ['Finding buyers', 'Pricing', 'Compliance', 'Payments', 'Logistics', 'Certifications', 'Not sure']
 
 function ExportPlanForm() {
   const [step, setStep] = useState(1)
   const [errors, setErrors] = useState({})
-  const [submitted, setSubmitted] = useState(false)
   
+  // Status state
+  const [status, setStatus] = useState('idle') // idle, sending, success
+  const [previewHtml, setPreviewHtml] = useState('')
+
   const [formData, setFormData] = useState({
     companyName: '', companyEmail: '', contactName: '', contactPhone: '+91 ',
     role: '', businessType: '',
@@ -307,17 +121,102 @@ function ExportPlanForm() {
 
   const handleSubmit = () => {
     if (validateStep3()) {
-      localStorage.removeItem(STORAGE_KEY)
-      setSubmitted(true)
+      setStatus('sending')
+      
+      // Simulate API call
+      setTimeout(() => {
+        // Map form data for email template
+        const emailData = {
+            name: formData.contactName,
+            email: formData.companyEmail,
+            topic: 'Export Plan Request (Detailed)',
+            message: `
+              <strong>Company:</strong> ${formData.companyName}<br>
+              <strong>Role:</strong> ${formData.role}<br>
+              <strong>Business Type:</strong> ${formData.businessType}<br>
+              <strong>Phone:</strong> ${formData.contactPhone}<br>
+              <br>
+              <strong>Product:</strong> ${formData.productName}<br>
+              <strong>Category:</strong> ${formData.productCategory.join(', ')}<br>
+              <strong>HSN Codes:</strong> ${formData.hsnCodes.join(', ')}<br>
+              <br>
+              <strong>Annual Sales:</strong> ${formData.annualSales}<br>
+              <strong>Target Markets:</strong> ${formData.targetMarkets.join(', ')}<br>
+              <strong>Currently Exporting:</strong> ${formData.isExporting}<br>
+              <strong>Export Countries:</strong> ${formData.currentExportCountries.join(', ')}<br>
+              <strong>Challenges:</strong> ${formData.challenges.join(', ')}
+            `
+        }
+
+        const clientContent = generateClientEmail(formData.contactName)
+        const adminContent = generateAdminEmail(emailData)
+        
+        setPreviewHtml(clientContent)
+        
+        localStorage.removeItem(STORAGE_KEY)
+        setStatus('success')
+        
+        console.log('--- EMAIL SENT (SIMULATED) ---')
+        console.log('To Client:', clientContent)
+      }, 1500)
     }
   }
 
-  if (submitted) {
+  if (status === 'success') {
     return (
-      <div className="form-success">
-        <div className="form-success-icon">✓</div>
-        <h3>Thank You!</h3>
-        <p>We'll contact you within 48 hours.</p>
+      <div className="form-success-container">
+        <div className="form-success">
+          <div className="form-success-icon">✓</div>
+          <h3>Application Received!</h3>
+          <p>We'll contact you within 48 hours at <strong>{formData.companyEmail}</strong>.</p>
+        </div>
+        
+        <div className="email-preview-wrapper">
+          <div className="preview-label">
+            Automatic Confirmation Email (Preview)
+          </div>
+          <div className="email-preview-frame" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+          <p className="preview-note">
+            * This is a live preview of the Google-style email template that will be sent.
+          </p>
+        </div>
+
+        <button 
+          onClick={() => { setStatus('idle'); setStep(1); setFormData({
+            companyName: '', companyEmail: '', contactName: '', contactPhone: '+91 ',
+            role: '', businessType: '',
+            productCategory: [], productName: '', hsnCodes: [],
+            annualSales: '', targetMarkets: [], isExporting: '',
+            currentExportCountries: [], challenges: [], consent: false
+          }) }} 
+          className="btn btn-outline"
+          style={{ marginTop: '20px' }}
+        >
+          Submit Another Application
+        </button>
+
+        <style>{`
+          .form-success-container { padding: 30px; text-align: center; }
+          .email-preview-wrapper { 
+            margin-top: 30px; 
+            text-align: left; 
+            background: var(--gray-50); 
+            padding: 20px; 
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+          }
+          .preview-label {
+            font-size: 11px; text-transform: uppercase; font-weight: 700; 
+            color: var(--gray-500); margin-bottom: 10px; letter-spacing: 0.5px;
+          }
+          .email-preview-frame {
+            background: white; border-radius: 4px; overflow: hidden; 
+            box-shadow: var(--shadow-sm);
+          }
+          .preview-note {
+            font-size: 10px; color: var(--gray-500); margin-top: 10px; font-style: italic;
+          }
+        `}</style>
       </div>
     )
   }
@@ -430,7 +329,9 @@ function ExportPlanForm() {
         {step < 3 ? (
           <button type="button" className="btn btn-primary" onClick={nextStep}>Continue</button>
         ) : (
-          <button type="button" className="btn btn-primary" onClick={handleSubmit}>Get My Export Plan</button>
+          <button type="button" className="btn btn-primary" onClick={handleSubmit} disabled={status === 'sending'}>
+            {status === 'sending' ? 'Submitting...' : 'Get My Export Plan'}
+          </button>
         )}
       </div>
       <p className="form-micro">Takes 2 min • Reply in 48 hrs</p>
