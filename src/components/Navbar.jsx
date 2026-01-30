@@ -15,9 +15,8 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="nav-logo">
-          <img src="/logo.png" alt="Go Global" className="nav-logo-img" />
-          <span>Go Global</span>
+        <Link to="/" className="nav-brand-wrapper" aria-label="Go Global home">
+          <span className="brand-logo-text">Go Global</span>
         </Link>
 
         <div className="nav-links">

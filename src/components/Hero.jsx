@@ -78,7 +78,11 @@ function Hero() {
         <div className="hero-grid">
           <div className="hero-content animate-fade-in">
 
-            
+            {/* Mini logo ABOVE kicker */}
+            <div className="hero-mini-brand">
+              <span className="hero-mini-brand-text">Go Global</span>
+            </div>
+
             <span className="label hero-label">⚡ INDIA GLOBAL TRADE SOLUTIONS</span>
             
             <h1 className="display-1 hero-title">
