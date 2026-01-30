@@ -13,44 +13,17 @@ const PRODUCT_CATEGORIES = [
 
 const BUSINESS_TYPES = ['Manufacturer', 'Trader', 'Broker', 'Exporter', 'Agent', 'Other']
 
-// HSN Chapters (1-99) with key sub-chapters
-const HSN_CODES = [
-  '01 - Live Animals', '02 - Meat & Edible Meat', '03 - Fish & Seafood', '04 - Dairy, Eggs, Honey',
-  '05 - Animal Products NES', '06 - Live Plants & Flowers', '07 - Vegetables', '08 - Fruits & Nuts',
-  '09 - Coffee, Tea, Spices', '10 - Cereals', '11 - Milling Products', '12 - Oil Seeds',
-  '13 - Lac, Gums, Resins', '14 - Vegetable Products NES', '15 - Fats & Oils', '16 - Meat/Fish Preparations',
-  '17 - Sugar & Confectionery', '18 - Cocoa & Chocolate', '19 - Cereal Preparations', '20 - Vegetable Preparations',
-  '21 - Misc Food Preparations', '22 - Beverages', '23 - Food Industry Residues', '24 - Tobacco',
-  '25 - Salt, Sulfur, Stone', '26 - Ores, Slag, Ash', '27 - Mineral Fuels, Oils', '28 - Inorganic Chemicals',
-  '29 - Organic Chemicals', '30 - Pharmaceutical Products', '31 - Fertilizers', '32 - Tanning, Dyes, Paints',
-  '33 - Essential Oils, Cosmetics', '34 - Soap, Waxes', '35 - Albuminoids, Glues', '36 - Explosives',
-  '37 - Photographic Goods', '38 - Misc Chemical Products', '39 - Plastics & Articles', '40 - Rubber & Articles', 
-  '41 - Raw Hides & Leather', '42 - Leather Articles', '43 - Furskins', '44 - Wood & Articles', '45 - Cork',
-  '46 - Straw Articles', '47 - Pulp', '48 - Paper & Paperboard', '49 - Printed Books, Newspapers',
-  '50 - Silk', '51 - Wool', '52 - Cotton', '53 - Vegetable Textile Fibers', '54 - Man-made Filaments',
-  '55 - Man-made Staple Fibers', '56 - Wadding, Felt, Twine', '57 - Carpets', '58 - Special Woven Fabrics',
-  '59 - Impregnated Textiles', '60 - Knitted Fabrics', '61 - Knitted Apparel', '62 - Woven Apparel',
-  '63 - Made-up Textiles', '64 - Footwear', '65 - Headgear', '66 - Umbrellas', '67 - Feathers, Artificial Flowers',
-  '68 - Stone, Plaster, Cement', '69 - Ceramics', '70 - Glass & Glassware', '71 - Gems, Jewelry, Coins',
-  '72 - Iron & Steel', '73 - Iron/Steel Articles', '74 - Copper', '75 - Nickel', '76 - Aluminum',
-  '78 - Lead', '79 - Zinc', '80 - Tin', '81 - Other Base Metals', '82 - Tools, Cutlery', '83 - Misc Metal Articles',
-  '84 - Machinery & Equipment', '85 - Electrical Equipment', '86 - Railway Equipment', '87 - Vehicles',
-  '88 - Aircraft', '89 - Ships, Boats', '90 - Optical, Medical Instruments', '91 - Clocks, Watches',
-  '92 - Musical Instruments', '93 - Arms & Ammunition', '94 - Furniture, Bedding', '95 - Toys, Games, Sports',
-  '96 - Misc Manufactured', '97 - Works of Art', '99 - Special Transactions'
-]
+// HSN Chapters removed in favor of text input
+// Comprehensive country list replaced by Continents
 
-// Comprehensive country list
-const TARGET_MARKETS = [
-  'UAE 🇦🇪', 'UK 🇬🇧', 'Australia 🇦🇺', 'Singapore 🇸🇬', 'South Korea 🇰🇷', 'Japan 🇯🇵', 'ASEAN (All)',
-  'Germany 🇩🇪', 'France 🇫🇷', 'Netherlands 🇳🇱', 'Italy 🇮🇹', 'Belgium 🇧🇪', 'Spain 🇪🇸', 'Poland 🇵🇱',
-  'Sweden 🇸🇪', 'Austria 🇦🇹', 'EU (Other)', 'USA 🇺🇸', 'Canada 🇨🇦', 'Mexico 🇲🇽', 'Brazil 🇧🇷',
-  'Chile 🇨🇱', 'Argentina 🇦🇷', 'Colombia 🇨🇴', 'Peru 🇵🇪', 'Saudi Arabia 🇸🇦', 'Qatar 🇶🇦', 'Kuwait 🇰🇼',
-  'Oman 🇴🇲', 'Bahrain 🇧🇭', 'Israel 🇮🇱', 'Turkey 🇹🇷', 'Iran 🇮🇷', 'Iraq 🇮🇶', 'South Africa 🇿🇦',
-  'Egypt 🇪🇬', 'Kenya 🇰🇪', 'Nigeria 🇳🇬', 'Morocco 🇲🇦', 'Tanzania 🇹🇿', 'Ghana 🇬🇭', 'Ethiopia 🇪🇹',
-  'China 🇨🇳', 'Hong Kong 🇭🇰', 'Taiwan 🇹🇼', 'Vietnam 🇻🇳', 'Thailand 🇹🇭', 'Indonesia 🇮🇩', 'Malaysia 🇲🇾',
-  'Philippines 🇵🇭', 'Bangladesh 🇧🇩', 'Sri Lanka 🇱🇰', 'Nepal 🇳🇵', 'Myanmar 🇲🇲', 'New Zealand 🇳🇿',
-  'Fiji 🇫🇯', 'Russia 🇷🇺', 'Kazakhstan 🇰🇿', 'Uzbekistan 🇺🇿', 'Other'
+const CONTINENTS = [
+  'North America', 
+  'South America', 
+  'Europe', 
+  'Middle East', 
+  'Africa', 
+  'Asia', 
+  'Australia/Oceania'
 ]
 
 const SALES_BANDS = ['< ₹5 Cr', '₹5–25 Cr', '₹25–100 Cr', '₹100–500 Cr', '₹500 Cr+']
@@ -68,8 +41,8 @@ function ExportPlanForm() {
   const [formData, setFormData] = useState({
     companyName: '', companyEmail: '', contactName: '', contactPhone: '+91 ',
     role: '', businessType: '',
-    productCategory: [], productName: '', hsnCodes: [],
-    annualSales: '', targetMarkets: [], isExporting: '',
+    productCategory: '', productName: '', hsnCode: '', // Changed to string
+    annualSales: '', targetContinents: [], isExporting: '', // Changed to targetContinents
     currentExportCountries: [], challenges: [], consent: false
   })
 
@@ -89,6 +62,15 @@ function ExportPlanForm() {
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: null }))
   }
 
+  // Toggle for checkboxes
+  const toggleSelection = (field, item) => {
+    const list = formData[field] || []
+    const newList = list.includes(item) 
+      ? list.filter(i => i !== item)
+      : [...list, item]
+    updateField(field, newList)
+  }
+
   const validateStep1 = () => {
     const e = {}
     if (!formData.companyName.trim()) e.companyName = 'Required'
@@ -101,8 +83,9 @@ function ExportPlanForm() {
 
   const validateStep2 = () => {
     const e = {}
+    if (!formData.productCategory) e.productCategory = 'Required'
     if (!formData.productName.trim()) e.productName = 'Required'
-    if (formData.hsnCodes.length === 0) e.hsnCodes = 'Select HSN'
+    if (!formData.hsnCode.trim()) e.hsnCode = 'Required'
     setErrors(e); return Object.keys(e).length === 0
   }
 
@@ -129,7 +112,7 @@ function ExportPlanForm() {
         const emailData = {
             name: formData.contactName,
             email: formData.companyEmail,
-            topic: 'Export Plan Request (Detailed)',
+            topic: 'Export Plan Request',
             message: `
               <strong>Company:</strong> ${formData.companyName}<br>
               <strong>Role:</strong> ${formData.role}<br>
@@ -137,13 +120,12 @@ function ExportPlanForm() {
               <strong>Phone:</strong> ${formData.contactPhone}<br>
               <br>
               <strong>Product:</strong> ${formData.productName}<br>
-              <strong>Category:</strong> ${formData.productCategory.join(', ')}<br>
-              <strong>HSN Codes:</strong> ${formData.hsnCodes.join(', ')}<br>
+              <strong>Category:</strong> ${formData.productCategory}<br>
+              <strong>HSN Code:</strong> ${formData.hsnCode}<br>
               <br>
               <strong>Annual Sales:</strong> ${formData.annualSales}<br>
-              <strong>Target Markets:</strong> ${formData.targetMarkets.join(', ')}<br>
+              <strong>Target Regions:</strong> ${formData.targetContinents.join(', ')}<br>
               <strong>Currently Exporting:</strong> ${formData.isExporting}<br>
-              <strong>Export Countries:</strong> ${formData.currentExportCountries.join(', ')}<br>
               <strong>Challenges:</strong> ${formData.challenges.join(', ')}
             `
         }
@@ -185,8 +167,8 @@ function ExportPlanForm() {
           onClick={() => { setStatus('idle'); setStep(1); setFormData({
             companyName: '', companyEmail: '', contactName: '', contactPhone: '+91 ',
             role: '', businessType: '',
-            productCategory: [], productName: '', hsnCodes: [],
-            annualSales: '', targetMarkets: [], isExporting: '',
+            productCategory: '', productName: '', hsnCode: '',
+            annualSales: '', targetContinents: [], isExporting: '',
             currentExportCountries: [], challenges: [], consent: false
           }) }} 
           className="btn btn-outline"
@@ -269,16 +251,32 @@ function ExportPlanForm() {
       {step === 2 && (
         <div className="form-step">
           <h3 className="form-step-title">Product Details</h3>
-          <div className="fg"><label>Product Category</label>
-            <MultiSelect options={PRODUCT_CATEGORIES} selected={formData.productCategory} onChange={(val) => updateField('productCategory', val)} placeholder="Select category..." />
+          <div className="fg"><label>Product Category *</label>
+            <select 
+              value={formData.productCategory} 
+              onChange={(e) => updateField('productCategory', e.target.value)} 
+              className={errors.productCategory ? 'err' : ''}
+            >
+              <option value="">Select a category</option>
+              {PRODUCT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {errors.productCategory && <span className="fe">{errors.productCategory}</span>}
           </div>
+          
           <div className="fg"><label>Product Name *</label>
-            <input type="text" value={formData.productName} onChange={(e) => updateField('productName', e.target.value)} placeholder="e.g. Cotton T-Shirts, Auto Parts" className={errors.productName ? 'err' : ''} />
+            <input type="text" value={formData.productName} onChange={(e) => updateField('productName', e.target.value)} placeholder="e.g. Cotton T-Shirts" className={errors.productName ? 'err' : ''} />
             {errors.productName && <span className="fe">{errors.productName}</span>}
           </div>
-          <div className="fg"><label>HSN Chapter/Code *</label>
-            <MultiSelect options={HSN_CODES} selected={formData.hsnCodes} onChange={(val) => updateField('hsnCodes', val)} placeholder="Select HSN..." searchPlaceholder="Search chapter or product..." />
-            {errors.hsnCodes && <span className="fe">{errors.hsnCodes}</span>}
+          
+          <div className="fg"><label>HSN Code *</label>
+            <input 
+              type="text" 
+              value={formData.hsnCode} 
+              onChange={(e) => updateField('hsnCode', e.target.value)} 
+              placeholder="Enter HSN Code (e.g. 610910)" 
+              className={errors.hsnCode ? 'err' : ''} 
+            />
+            {errors.hsnCode && <span className="fe">{errors.hsnCode}</span>}
           </div>
         </div>
       )}
@@ -294,9 +292,22 @@ function ExportPlanForm() {
             </div>
             {errors.annualSales && <span className="fe">{errors.annualSales}</span>}
           </div>
-          <div className="fg"><label>Target Markets</label>
-            <MultiSelect options={TARGET_MARKETS} selected={formData.targetMarkets} onChange={(val) => updateField('targetMarkets', val)} placeholder="Select countries..." />
+          
+          <div className="fg"><label>Target Continents *</label>
+            <div className="check-grid">
+              {CONTINENTS.map(c => (
+                <label key={c} className="checkbox-card">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.targetContinents.includes(c)}
+                    onChange={() => toggleSelection('targetContinents', c)}
+                  />
+                  <span>{c}</span>
+                </label>
+              ))}
+            </div>
           </div>
+
           <div className="fg"><label>Currently Exporting? *</label>
             <div className="radio-group horizontal">
               <label className="radio"><input type="radio" name="exp" value="yes" checked={formData.isExporting === 'yes'} onChange={(e) => updateField('isExporting', e.target.value)} /><span>Yes</span></label>
@@ -304,16 +315,12 @@ function ExportPlanForm() {
             </div>
             {errors.isExporting && <span className="fe">{errors.isExporting}</span>}
           </div>
-          {formData.isExporting === 'yes' && (
-            <div className="fg"><label>Current Export Countries</label>
-              <MultiSelect options={TARGET_MARKETS} selected={formData.currentExportCountries} onChange={(val) => updateField('currentExportCountries', val)} placeholder="Select..." />
-            </div>
-          )}
+          
           <div className="fg"><label>Challenges</label>
             <div className="chips">
               {CHALLENGES.map(c => (
                 <button key={c} type="button" className={`chip ${formData.challenges.includes(c) ? 'active' : ''}`}
-                  onClick={() => updateField('challenges', formData.challenges.includes(c) ? formData.challenges.filter(x => x !== c) : [...formData.challenges, c])}>{c}</button>
+                  onClick={() => toggleSelection('challenges', c)}>{c}</button>
               ))}
             </div>
           </div>
@@ -360,6 +367,16 @@ function ExportPlanForm() {
         .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
         .checkbox { display: flex; align-items: flex-start; gap: 5px; font-size: 10px; cursor: pointer; }
         .checkbox input { width: 13px; height: 13px; accent-color: var(--primary); }
+        
+        .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .checkbox-card { 
+          display: flex; align-items: center; gap: 8px; 
+          padding: 8px; border: 1px solid var(--gray-200); border-radius: 6px; 
+          font-size: 11px; cursor: pointer; transition: all 0.2s;
+        }
+        .checkbox-card:hover { border-color: var(--primary); background: var(--gray-50); }
+        .checkbox-card input { width: 14px; height: 14px; accent-color: var(--primary); }
+
         .form-nav { display: flex; gap: 8px; margin-top: 14px; }
         .form-nav .btn { flex: 1; padding: 9px; font-size: 12px; }
         .form-micro { text-align: center; font-size: 9px; color: var(--gray-500); margin-top: 6px; }
